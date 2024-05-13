@@ -16,11 +16,11 @@ export const isResponseOk = (response) => {
 }
 
 const normalizeDataObject = (obj) => {
-  return {
-    ...obj,
-    category: obj.categories,
-    users: obj.users_permissions_users,
-  }
+  let str = JSON.stringify(obj)
+  str = str.replaceAll('_id', 'id');
+  const newObj = JSON.parse(str)
+  const result = { ...newObj, category: newObj.categories }
+  return result;
 }
 
 export const normalizeData = (data) => {
@@ -38,7 +38,7 @@ export const getNormalizedGamesDataByCategory = async (url, category) => {
   try {
     const data = await getData(`${url}?categories.name=${category}`)
     if (!data.length) {
-      throw new Error('Нет игр в категории')
+      return null;
     }
     return isResponseOk(data) ? normalizeData(data) : data
   } catch (error) {
