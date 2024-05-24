@@ -38,7 +38,7 @@ export const getNormalizedGamesDataByCategory = async (url, category) => {
   try {
     const data = await getData(`${url}?categories.name=${category}`)
     if (!data.length) {
-      return null;
+      throw new Error('Нет игр в категории')
     }
     return isResponseOk(data) ? normalizeData(data) : data
   } catch (error) {
@@ -51,7 +51,7 @@ export const authorize = async (url, data) => {
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ users: usersArray }),
     })
     if (response.status !== 200) {
       throw new Error('Ошибка авторизации')
